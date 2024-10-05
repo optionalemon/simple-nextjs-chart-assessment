@@ -68,7 +68,7 @@ export default function ChartSection({ pdDataset }: ChartSectionProps) {
           />
         )}
         {currentDataIndex.includes(2) && (
-          <Bar legendType="square" dataKey="Actual Default" barSize={100} fill="#2563eb" />
+          <Bar legendType="square" dataKey="Actual Default" barSize={100} fill="#6366f1" />
         )}
         {currentDataIndex.includes(3) &&
           bonding_data.map((entry: any) => {

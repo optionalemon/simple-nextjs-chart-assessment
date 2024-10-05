@@ -102,7 +102,7 @@ export default function ButtonSection() {
               removeData={removeData}
             />
           ))}
-          <Button className="mt-8 w-full" onClick={() => setIsOpen(false)}>
+          <Button className="mt-8 w-full" color="slate" onClick={() => setIsOpen(false)}>
             Done
           </Button>
         </DialogPanel>

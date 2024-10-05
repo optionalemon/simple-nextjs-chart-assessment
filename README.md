@@ -15,7 +15,7 @@ Make sure you have the following installed:
    ```
 2. Navigate into the project directory:
    ```bash
-   cd my-project
+   cd simple-nextjs-chart-assessment
    ```
 3. Install the required dependencies:
    ```bash

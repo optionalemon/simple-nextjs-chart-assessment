@@ -5,7 +5,6 @@ import { ReactNode, MouseEventHandler, useState } from "react";
 import { Button, Dialog, DialogPanel, Switch, Text } from "@tremor/react";
 import { CgAddR, CgPen } from "react-icons/cg";
 import { useStore } from "@/store/StoreProvider";
-import { current } from "tailwindcss/colors";
 
 interface MainButtonProps {
   children: ReactNode;

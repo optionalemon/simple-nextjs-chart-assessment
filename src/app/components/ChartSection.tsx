@@ -13,7 +13,6 @@ import {
   ReferenceLine,
 } from "recharts";
 import { useStore } from "@/store/StoreProvider";
-import { Text } from "@tremor/react";
 
 interface ChartSectionProps {
   pdDataset: Array<Array<object>>;
@@ -27,7 +26,7 @@ export default function ChartSection({ pdDataset }: ChartSectionProps) {
   const state = useStore() as StoreState;
   const currentDataIndex = state.currentDataIndex;
 
-  const bonding_data = pdDataset[1];
+  const bonding_data: { rate: string; bonding: number }[] = pdDataset[1] as { rate: string; bonding: number }[];
   const pd_data = pdDataset[0];
   return (
     <ResponsiveContainer width="100%" className="mt-12 text-sm" height={400}>
@@ -71,11 +70,12 @@ export default function ChartSection({ pdDataset }: ChartSectionProps) {
           <Bar legendType="square" dataKey="Actual Default" barSize={100} fill="#6366f1" />
         )}
         {currentDataIndex.includes(3) &&
-          bonding_data.map((entry: any) => {
+          bonding_data.map((entry: { rate: string; bonding: number }) => {
             return (
               <ReferenceLine
-                y={entry["bonding"]}
-                label={entry["rate"]}
+                key={entry.rate}
+                y={entry.bonding}
+                label={entry.rate}
                 stroke="#9ca3af"
                 strokeDasharray="3 3"
                 strokeWidth={2}

@@ -75,10 +75,10 @@ export async function loadData(dateThreshold: string) {
     const stockDataset = await loadStockData(dateThreshold);
     const defaultDataset = await loadDefaultData(dateThreshold);
     const bondDataset = await loadBondData();
-    const combinedDataMap: Record<string, any> = {};
+    const combinedDataMap: Record<string, { date: string; "Historical PD"?: number; "Forward PD"?: number; "Stock Price"?: number; "Actual Default"?: number; [key: string]: number | string | undefined }> = {};
 
     // Helper function to add entries to the combined map
-    const addToCombinedMap = (data: any[], entryKeys: string[]) => {
+    const addToCombinedMap = (data: { date: string; [key: string]: number | string }[], entryKeys: string[]) => {
         data.forEach(entry => {
             const date = entry.date;
 

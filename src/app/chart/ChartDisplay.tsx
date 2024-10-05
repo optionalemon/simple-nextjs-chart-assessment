@@ -1,7 +1,7 @@
 import { AreaChart, Card, Title, Text } from "@tremor/react";
 import ButtonSection from "@/app/components/ButtonSection";
 import SelectSection from "@/app/components/SelectSection";
-import { getPdChartData } from "./Chart";
+import { getPdChartData } from "@/lib/load-data";
 
 export default async function ChartDisplay() {
   const dateThreshold = '2023-01-01'

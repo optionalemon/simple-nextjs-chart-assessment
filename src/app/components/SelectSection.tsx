@@ -6,10 +6,7 @@ export default function SelectSection() {
     <DateRangePicker enableSelect={false} />
       <Select defaultValue="1" className="w-20">
         <SelectItem value="1">PD Horizon</SelectItem>
-        <SelectItem value="2">Option Two</SelectItem>
-        <SelectItem value="3">Option Three</SelectItem>
       </Select>
-      
     </div>
   );
 }

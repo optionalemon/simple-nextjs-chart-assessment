@@ -1,4 +1,4 @@
-# Front-end Development Internship Task
+# Front-end Chart Assessment
 ### Deployment
 
 https://simple-nextjs-chart-assessment-9f8oitvt3-optionalemons-projects.vercel.app/

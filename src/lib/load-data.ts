@@ -57,7 +57,7 @@ async function loadDefaultData(dateThreshold: string) {
     return processedDefaultData;
 }
 
-async function loadBondData(dateThreshold: string) {
+async function loadBondData() {
     const bondFilePath = path.join(process.cwd(), 'public', 'data', 'PDIR_Bonding.json');
     const bondJsonData = await fs.promises.readFile(bondFilePath, 'utf-8');
     const bondData = JSON.parse(bondJsonData);
@@ -65,7 +65,7 @@ async function loadBondData(dateThreshold: string) {
     const processedBondData = bondData.rate.map((rate: string, index: number) => ({
         rate,
         "bonding": bondData.bonding[index],
-    })).filter((data: { date: string; }) => data.date >= dateThreshold);
+    }));
 
     return processedBondData;
 }
@@ -74,7 +74,7 @@ export async function loadData(dateThreshold: string) {
     const pdBasicDataset = await loadBasicData(dateThreshold);
     const stockDataset = await loadStockData(dateThreshold);
     const defaultDataset = await loadDefaultData(dateThreshold);
-    const bondDataset = await loadBondData(dateThreshold);
+    const bondDataset = await loadBondData();
     const combinedDataMap: Record<string, any> = {};
 
     // Helper function to add entries to the combined map
@@ -98,5 +98,5 @@ export async function loadData(dateThreshold: string) {
     addToCombinedMap(defaultDataset, ["Actual Default"]);
 
     const combinedDataArray = Object.values(combinedDataMap);
-    return combinedDataArray;
+    return [combinedDataArray, bondDataset];
 }

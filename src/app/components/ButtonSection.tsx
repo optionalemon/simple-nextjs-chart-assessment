@@ -29,6 +29,45 @@ const MainButton = ({ children, onClick, icon }: MainButtonProps) => {
   );
 };
 
+const toggles = [
+  { label: "Stock Price", index: 1 },
+  { label: "Actual Default", index: 2 },
+  { label: "PDiR Bonding", index: 3 },
+];
+
+interface DataToggleProps {
+  label: string;
+  index: number;
+  currentDataIndex: number[];
+  addData: (data: number) => void;
+  removeData: (data: number) => void;
+}
+
+const DataToggle = ({
+  label,
+  index,
+  currentDataIndex,
+  addData,
+  removeData,
+}: DataToggleProps) => {
+  const isToggled = currentDataIndex.includes(index);
+
+  const handleToggle = () => {
+    if (isToggled) {
+      removeData(index);
+    } else {
+      addData(index);
+    }
+  };
+
+  return (
+    <div className="flex flex-row justify-between items-center mt-4">
+      <Text>{label}</Text>
+      <Switch defaultChecked={isToggled} onChange={handleToggle} />
+    </div>
+  );
+};
+
 export default function ButtonSection() {
   const [isOpen, setIsOpen] = useState(false);
   const state = useStore() as StoreState;
@@ -49,37 +88,25 @@ export default function ButtonSection() {
         </MainButton>
       </div>
       <Dialog open={isOpen} onClose={(val) => setIsOpen(val)} static={true}>
-      <DialogPanel>
-        <h3 className="text-lg font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">Reference</h3>
-        <div className="flex flex-row justify-between items-center mt-4">
-          <Text>Stock Price</Text>
-          <Switch defaultChecked={currentDataIndex.includes(1)} onChange={() => {
-            if (currentDataIndex.includes(1)) {
-              removeData(1);
-            } else {
-              addData(1);
-            }
-          }} />
-        </div>
-        <div className="flex flex-row justify-between items-center mt-4">
-          <Text>Actual Default</Text>
-          <Switch defaultChecked={currentDataIndex.includes(2)} onChange={() => {
-            if (currentDataIndex.includes(2)) {
-              removeData(2);
-            } else {
-              addData(2);
-            }
-          }}/>
-        </div>
-        <div className="flex flex-row justify-between items-center mt-4">
-          <Text>PDiR Bonding</Text>
-          <Switch />
-        </div>
-        <Button className="mt-8 w-full" onClick={() => setIsOpen(false)}>
-          Done
-        </Button>
-      </DialogPanel>
-    </Dialog>
+        <DialogPanel>
+          <h3 className="text-lg font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
+            Reference
+          </h3>
+          {toggles.map((toggle) => (
+            <DataToggle
+              key={toggle.index}
+              label={toggle.label}
+              index={toggle.index}
+              currentDataIndex={currentDataIndex}
+              addData={addData}
+              removeData={removeData}
+            />
+          ))}
+          <Button className="mt-8 w-full" onClick={() => setIsOpen(false)}>
+            Done
+          </Button>
+        </DialogPanel>
+      </Dialog>
     </>
   );
 }

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-export async function getPdChartData(dateThreshold: string) {
+async function loadBasicData(dateThreshold: string) {
 
     const historicalFilePath = path.join(process.cwd(), 'public', 'data', 'Historical_PD.json'); 
     const historicalJsonData = await fs.promises.readFile(historicalFilePath, 'utf-8');
@@ -29,4 +29,74 @@ export async function getPdChartData(dateThreshold: string) {
 
     const pdDataset = [...processedHistoricalData, ...processedForwardData];
     return pdDataset;
+}
+
+async function loadStockData(dateThreshold: string) {
+    const stockFilePath = path.join(process.cwd(), 'public', 'data', 'Stock_Price.json');
+    const stockJsonData = await fs.promises.readFile(stockFilePath, 'utf-8');
+    const stockData = JSON.parse(stockJsonData);
+
+    const processedStockData = stockData.Date.map((date: string, index: number) => ({
+        date,
+        "Stock Price": stockData.Stock_Price[index],
+    })).filter((data: { date: string; }) => data.date >= dateThreshold);
+
+    return processedStockData;
+}
+
+async function loadDefaultData(dateThreshold: string) {
+    const defaultFilePath = path.join(process.cwd(), 'public', 'data', 'Actual_Defaults.json');
+    const defaultJsonData = await fs.promises.readFile(defaultFilePath, 'utf-8');
+    const defaultData = JSON.parse(defaultJsonData);
+
+    const processedDefaultData = defaultData.Date.map((date: string, index: number) => ({
+        date,
+        "Actual Default": defaultData.Actual_Default[index],
+    })).filter((data: { date: string; }) => data.date >= dateThreshold);
+
+    return processedDefaultData;
+}
+
+async function loadBondData(dateThreshold: string) {
+    const bondFilePath = path.join(process.cwd(), 'public', 'data', 'PDIR_Bonding.json');
+    const bondJsonData = await fs.promises.readFile(bondFilePath, 'utf-8');
+    const bondData = JSON.parse(bondJsonData);
+
+    const processedBondData = bondData.rate.map((rate: string, index: number) => ({
+        rate,
+        "bonding": bondData.bonding[index],
+    })).filter((data: { date: string; }) => data.date >= dateThreshold);
+
+    return processedBondData;
+}
+
+export async function loadData(dateThreshold: string) {
+    const pdBasicDataset = await loadBasicData(dateThreshold);
+    const stockDataset = await loadStockData(dateThreshold);
+    const defaultDataset = await loadDefaultData(dateThreshold);
+    const bondDataset = await loadBondData(dateThreshold);
+    const combinedDataMap: Record<string, any> = {};
+
+    // Helper function to add entries to the combined map
+    const addToCombinedMap = (data: any[], entryKeys: string[]) => {
+        data.forEach(entry => {
+            const date = entry.date;
+
+            if (!combinedDataMap[date]) {
+                combinedDataMap[date] = { date }; 
+            }
+            entryKeys.forEach(key => {
+                if (entry[key] !== undefined) {
+                    combinedDataMap[date][key] = entry[key];
+                }
+            });
+        });
+    };
+
+    addToCombinedMap(pdBasicDataset, ["Historical PD", "Forward PD"]);
+    addToCombinedMap(stockDataset, ["Stock Price"]);
+    addToCombinedMap(defaultDataset, ["Actual Default"]);
+
+    const combinedDataArray = Object.values(combinedDataMap);
+    return combinedDataArray;
 }

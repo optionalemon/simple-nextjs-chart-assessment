@@ -62,7 +62,7 @@ const DataToggle = ({
   return (
     <div className="flex flex-row justify-between items-center mt-4">
       <Text>{label}</Text>
-      <Switch defaultChecked={isToggled} onChange={handleToggle} />
+      <Switch defaultChecked={isToggled} onChange={handleToggle} color="slate" />
     </div>
   );
 };
